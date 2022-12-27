@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/aset">Aset</a></li>
+        <li><a href="/users">User</a></li>
+    </ul>
+    <h1><%= title %></h1>
+    <p>Ini adalah daftar aset dari API:</p>
+    <p><i>https://dummyjson.com/products</i></p>
+    <table>
+        <tr>
+            <th>No</th>
+            <th>Title</th>
+            <th>Price</th>
+        </tr>
+        <% products.forEach((product, i) => { %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td><%= product.title %></td>
+            <td>$<%= product.price.toLocaleString('en-US') %></td>
+        </tr>
+        <% }); %>
+    </table>
+  </body>
+</html>
