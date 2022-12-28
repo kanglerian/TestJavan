@@ -3,6 +3,7 @@
 Ini adalah aplikasi yang dibuat dalam proses rekrutmen Javan "Soal Test NodeJS".
 
 1. Schema DB
+
 ![Schema DB](/schema_db.png?raw=true)
 
 2. Cara menjalankan aplikasi:
