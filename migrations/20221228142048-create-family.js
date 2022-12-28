@@ -1,20 +1,21 @@
 'use strict';
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Asets', {
+    await queryInterface.createTable('Families', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      idUser: {
-        type: Sequelize.INTEGER
-      },
-      namaAset: {
+      name: {
         type: Sequelize.STRING
       },
-      price: {
+      gender: {
+        type: Sequelize.BOOLEAN
+      },
+      idParent: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -28,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Asets');
+    await queryInterface.dropTable('Families');
   }
 };

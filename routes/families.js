@@ -2,17 +2,17 @@ let express = require('express');
 let router = express.Router();
 let axios = require('axios');
 
-const { Keluarga, Aset } = require('../models');
+const { Family, Asset } = require('../models');
 
 /* GET users listing. */
 router.get('/', async(req, res) => {
-  const data = await Keluarga.findAll({
+  const data = await Family.findAll({
     where: {
       idParent: null
     }
   });
   res.render('users/index',{
-    title: 'TesJavan - Keluarga',
+    title: 'TestJavan - Families',
     families: data,
     url: req.originalUrl
   });
@@ -20,17 +20,17 @@ router.get('/', async(req, res) => {
 
 /* GET users listing. */
 router.get('/:id', async(req, res) => {
-  const data = await Keluarga.findAll({
+  const families = await Family.findAll({
     where: {
       idParent: req.params.id
     }
   });
-  const asets = await Aset.findAll({
+  const assets = await Asset.findAll({
     where: {
       idUser: req.params.id
     }
   });
-  const nama = await Keluarga.findOne({
+  const parent = await Family.findOne({
     where: {
       id: req.params.id
     }
@@ -39,40 +39,40 @@ router.get('/:id', async(req, res) => {
   .then((response) => {
     const products = response.data.products;
     res.render('users/detail',{
-      title: 'TesJavan - Keluarga',
-      families: data,
+      title: 'TestJavan - Families',
+      families: families,
       products: products,
-      asets: asets,
+      assets: assets,
       url: req.originalUrl,
       user: req.params.id,
-      nama: nama,
+      parent: parent,
     });
   }).catch((error) => {
     res.send(error);
   });
 });
 
-router.post('/aset', async(req, res) => {
+router.post('/asset', async(req, res) => {
   try {
-    await Aset.create(req.body);
+    await Asset.create(req.body);
     res.redirect('back');
   } catch (error) {
     res.send(error);
   }
 });
 
-router.post('/keluarga', async(req, res) => {
+router.post('/family', async(req, res) => {
   try {
-    await Keluarga.create(req.body);
+    await Family.create(req.body);
     res.redirect('back');
   } catch (error) {
     res.send(error);
   }
 });
 
-router.patch('/aset/:id', async(req, res) => {
+router.patch('/asset/:id', async(req, res) => {
   try {
-    await Aset.update(req.body,{
+    await Asset.update(req.body,{
       where:{
         id: req.params.id
       }
@@ -85,7 +85,7 @@ router.patch('/aset/:id', async(req, res) => {
 
 router.patch('/:id', async(req, res) => {
   try {
-    await Keluarga.update(req.body,{
+    await Family.update(req.body,{
       where:{
         id: req.params.id
       }
@@ -98,7 +98,7 @@ router.patch('/:id', async(req, res) => {
 
 router.delete('/:id', async(req, res) => {
   try {
-    await Keluarga.destroy({
+    await Family.destroy({
       where: {
         id: req.params.id
       }
@@ -109,9 +109,9 @@ router.delete('/:id', async(req, res) => {
   }
 });
 
-router.delete('/aset/:id', async(req, res) => {
+router.delete('/asset/:id', async(req, res) => {
   try {
-    await Aset.destroy({
+    await Asset.destroy({
       where: {
         id: req.params.id
       }

@@ -9,18 +9,18 @@
 <body>
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a href="/aset">Aset</a></li>
-    <li><a href="/users">User</a></li>
+    <li><a href="/assets">Assets</a></li>
+    <li><a href="/families">Families</a></li>
   </ul>
 
-    <p>Ini adalah daftar keluarga:</p>
-    <button onclick="addKeluarga()">Add Keluarga</button>
+    <p>This is a family register:</p>
+    <button onclick="addKeluarga()">Add Family</button>
     <div style="margin-top: 10px;display: none;" id="add-keluarga">
-      <form action="/users/keluarga" method="POST">
-        <input type="text" name="nama" placeholder="Input name in here..">
-        <select name="jeniskelamin">
-          <option value="1">Laki-laki</option>
-          <option value="0">Perempuan</option>
+      <form action="/families/family" method="POST">
+        <input type="text" name="name" placeholder="Input name in here..">
+        <select name="gender">
+          <option value="1">Male</option>
+          <option value="0">Female</option>
         </select>
         <button type="submit">save</button>
       </form>
@@ -28,39 +28,39 @@
   <table style="margin-top: 10px">
     <tr>
       <th>No</th>
-      <th>Nama</th>
-      <th>Jenis Kelamin</th>
+      <th>Name</th>
+      <th>Gender</th>
       <th>#</th>
     </tr>
     <% if(families.length > 0){ %>
     <% families.forEach((family,i) => { %>
     <tr>
       <td><%= i + 1 %></td>
-      <form action="/users/<%= family.id %>?_method=PATCH" method="POST">
+      <form action="/families/<%= family.id %>?_method=PATCH" method="POST">
       <td>
-        <a href="/users/<%= family.id %>" id="namaLabel<%= family.id %>" style="display:block"><%= family.nama %></a>
-        <input type="text" name="nama" value="<%= family.nama %>" id="nama<%= family.id %>" style="display:none">
+        <a href="/families/<%= family.id %>" id="namaLabel<%= family.id %>" style="display:block"><%= family.name %></a>
+        <input type="text" name="name" value="<%= family.name %>" id="nama<%= family.id %>" style="display:none">
       </td>
       <td>
-        <span id="jkLabel<%= family.id %>" style="display:block"><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></span>
-        <select name="jeniskelamin" id="jk<%= family.id %>" style="display:none">
-          <option value="<%= family.jeniskelamin == true ? 1 : 0 %>" selected><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></option>
-          <option value="<%= family.jeniskelamin == true ? 0 : 1 %>"><%= family.jeniskelamin == true ? 'Perempuan' : 'Laki-laki' %></option>
+        <span id="jkLabel<%= family.id %>" style="display:block"><%= family.gender == true ? 'Male' : 'Female' %></span>
+        <select name="gender" id="jk<%= family.id %>" style="display:none">
+          <option value="<%= family.gender == true ? 1 : 0 %>" selected><%= family.gender == true ? 'Male' : 'Female' %></option>
+          <option value="<%= family.gender == true ? 0 : 1 %>"><%= family.gender == true ? 'Female' : 'Male' %></option>
         </select>
       </td>
       <td>
         <button type="submit" style="display:none" id="save<%= family.id %>">save</button>
       </form>
         <button onclick="editForm(`<%= family.id %>`)">edit</button>
-        <form style="display: inline;" action="/users/<%= family.id %>?_method=DELETE" method="POST">
-          <button type="submit">hapus</button>
+        <form style="display: inline;" action="/families/<%= family.id %>?_method=DELETE" method="POST">
+          <button type="submit">delete</button>
         </form>
       </td>
     </tr>
     <% }); %>
     <% } else { %>
       <tr>
-        <td colspan="4">Belum ada keluarga yang dimiliki</td>
+        <td colspan="4">No family owned yet.</td>
       </tr>
     <% } %>
   </table>

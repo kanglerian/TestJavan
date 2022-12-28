@@ -9,19 +9,20 @@
 <body>
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a href="/aset">Aset</a></li>
-    <li><a href="/users">User</a></li>
+    <li><a href="/assets">Assets</a></li>
+    <li><a href="/families">Families</a></li>
   </ul>
-  <a href="/users/<%= nama.idParent %>">Kembali</a>
-  <h2>Halo, ini <%= nama.nama %></h2>
-  <% if(url != '/users'){ %>
-  <p>Ini adalah daftar aset yang dimiliki <b><%= nama.nama %></b>:</p>
-  <button onclick="addAset()">Add Asset</button>
+  <a href="/families/<%= parent.idParent %>">Back</a>
+  <h2>Hallo, I'm <%= parent.name %></h2>
+  <% if(url != '/families'){ %>
+  <p>This is a list of owned assets of <b><%= parent.name %></b>:</p>
+  <button onclick="addAsset()">Add Asset</button>
   <div style="margin-top: 10px;display: none;" id="add-aset">
-    <form action="/users/aset" method="POST">
+    <form action="/families/asset" method="POST">
       <input type="hidden" name="idUser" value="<%= user %>">
       <input type="hidden" name="price" id="price">
-      <select name="namaAset" id="aset" onchange="changeProduct(this.options[this.selectedIndex].getAttribute('data-price'))">
+      <select name="nameAsset" id="aset"
+        onchange="changeProduct(this.options[this.selectedIndex].getAttribute('data-price'))">
         <option>Pilih</option>
         <% products.forEach((product,i) => { %>
         <option value="<%= product.title %>" data-price="<%= product.price %>"><%=  product.title %></option>
@@ -38,48 +39,49 @@
       <th>#</th>
     </tr>
     <% var totalPrice = 0; %>
-    <% if(asets.length > 0){ %>
-    <% asets.forEach((aset,i) => { %>
+    <% if(assets.length > 0){ %>
+    <% assets.forEach((asset,i) => { %>
     <tr>
       <td><%= i + 1 %></td>
-      <form action="/users/aset/<%= aset.id %>?_method=PATCH" method="POST">
-      <td>
-        <span id="namaAsetLabel<%= aset.id %>" style="display:block"><%= aset.namaAset %></span>
-        <input type="text" name="namaAset" value="<%= aset.namaAset %>" id="namaAset<%= aset.id %>"  style="display:none">
-      </td>
-      <td>
-        <span id="priceLabel<%= aset.id %>" style="display:block">$<%= aset.price.toLocaleString('en-US')%></span>
-        <input type="text" name="price" value="<%= aset.price %>" id="price<%= aset.id %>"  style="display:none">
-        <% totalPrice += aset.price %>
-      </td>
-      <td>
-        <button type="submit" style="display:none" id="save<%= aset.id %>">save</button>
+      <form action="/families/asset/<%= asset.id %>?_method=PATCH" method="POST">
+        <td>
+          <span id="nameAssetLabel<%= asset.id %>" style="display:block"><%= asset.nameAsset %></span>
+          <input type="text" name="nameAsset" value="<%= asset.nameAsset %>" id="nameAsset<%= asset.id %>"
+            style="display:none">
+        </td>
+        <td>
+          <span id="priceLabel<%= asset.id %>" style="display:block">$<%= asset.price.toLocaleString('en-US')%></span>
+          <input type="text" name="price" value="<%= asset.price %>" id="price<%= asset.id %>" style="display:none">
+          <% totalPrice += asset.price %>
+        </td>
+        <td>
+          <button type="submit" style="display:none" id="save<%= asset.id %>">save</button>
       </form>
-      <button onclick="editForm(`<%= aset.id %>`)">edit</button>
-        <form style="display: inline;" action="/users/aset/<%= aset.id %>?_method=DELETE" method="POST">
-          <button type="submit">hapus</button>
-        </form>
+      <button onclick="editAsset(`<%= asset.id %>`)">edit</button>
+      <form style="display: inline;" action="/families/asset/<%= asset.id %>?_method=DELETE" method="POST">
+        <button type="submit">delete</button>
+      </form>
       </td>
     </tr>
     <% }); %>
     <% } else { %>
-      <tr>
-        <td colspan="4">Belum ada aset yang dimiliki</td>
-      </tr>
+    <tr>
+      <td colspan="4">No assets owned yet.</td>
+    </tr>
     <% } %>
   </table>
   <p>Total Price: $<%= totalPrice.toLocaleString('en-US') %></p>
   <%}%>
 
-  <p>Ini adalah daftar keluarga <b><%= nama.nama %></b>:</p>
-  <button onclick="addKeluarga()">Add Keluarga</button>
+  <p>This is a family register of <b><%= parent.name %></b>:</p>
+  <button onclick="addFamily()">Add Family</button>
   <div style="margin-top: 10px;display: none;" id="add-keluarga">
-    <form action="/users/keluarga" method="POST">
-      <input type="hidden" name="idParent" value="<%= nama.id %>">
-      <input type="text" name="nama" placeholder="Input name in here..">
-      <select name="jeniskelamin">
-        <option value="1">Laki-laki</option>
-        <option value="0">Perempuan</option>
+    <form action="/families/family" method="POST">
+      <input type="hidden" name="idParent" value="<%= parent.id %>">
+      <input type="text" name="name" placeholder="Input name in here..">
+      <select name="gender">
+        <option value="1">Male</option>
+        <option value="0">Female</option>
       </select>
       <button type="submit">save</button>
     </form>
@@ -87,40 +89,44 @@
   <table style="margin-top: 10px">
     <tr>
       <th>No</th>
-      <th>Nama</th>
-      <th>Jenis Kelamin</th>
+      <th>Name</th>
+      <th>Gender</th>
       <th>#</th>
     </tr>
     <% if(families.length > 0){ %>
     <% families.forEach((family,i) => { %>
-      <tr>
-        <td><%= i + 1 %></td>
-        <form action="/users/<%= family.id %>?_method=PATCH" method="POST">
+    <tr>
+      <td><%= i + 1 %></td>
+      <form action="/families/<%= family.id %>?_method=PATCH" method="POST">
         <td>
-          <a href="/users/<%= family.id %>" id="namaLabel<%= family.id %>" style="display:block"><%= family.nama %></a>
-          <input type="text" name="nama" value="<%= family.nama %>" id="nama<%= family.id %>" style="display:none">
+          <a href="/families/<%= family.id %>" id="nameLabel<%= family.id %>"
+            style="display:block"><%= family.name %></a>
+          <input type="text" name="name" value="<%= family.name %>" id="name<%= family.id %>" style="display:none">
         </td>
         <td>
-          <span id="jkLabel<%= family.id %>" style="display:block"><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></span>
-          <select name="jeniskelamin" id="jk<%= family.id %>" style="display:none">
-            <option value="<%= family.jeniskelamin == true ? 1 : 0 %>" selected><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></option>
-            <option value="<%= family.jeniskelamin == true ? 0 : 1 %>"><%= family.jeniskelamin == true ? 'Perempuan' : 'Laki-laki' %></option>
+          <span id="genderLabel<%= family.id %>"
+            style="display:block"><%= family.gender == true ? 'Male' : 'Female' %></span>
+          <select name="gender" id="gender<%= family.id %>" style="display:none">
+            <option value="<%= family.gender == true ? 1 : 0 %>" selected>
+              <%= family.gender == true ? 'Male' : 'Female' %></option>
+            <option value="<%= family.gender == true ? 0 : 1 %>"><%= family.gender == true ? 'Female' : 'Male' %>
+            </option>
           </select>
         </td>
         <td>
           <button type="submit" style="display:none" id="save<%= family.id %>">save</button>
-        </form>
-          <button onclick="editForm(`<%= family.id %>`)">edit</button>
-          <form style="display: inline;" action="/users/<%= family.id %>?_method=DELETE" method="POST">
-            <button type="submit">hapus</button>
-          </form>
-        </td>
-      </tr>
+      </form>
+      <button onclick="editFamily(`<%= family.id %>`)">edit</button>
+      <form style="display: inline;" action="/families/<%= family.id %>?_method=DELETE" method="POST">
+        <button type="submit">delete</button>
+      </form>
+      </td>
+    </tr>
     <% }); %>
     <% } else { %>
-      <tr>
-        <td colspan="4">Belum ada keluarga yang dimiliki</td>
-      </tr>
+    <tr>
+      <td colspan="4">No family owned yet.</td>
+    </tr>
     <% } %>
   </table>
 
@@ -129,7 +135,7 @@
       const price = document.getElementById('price').value = data;
     }
 
-    function addAset() {
+    function addAsset() {
       const form = document.getElementById('add-aset');
       if (form.style.display == 'none') {
         form.style.display = 'block';
@@ -138,7 +144,7 @@
       }
     }
 
-    function addKeluarga() {
+    function addFamily() {
       const form = document.getElementById('add-keluarga');
       if (form.style.display == 'none') {
         form.style.display = 'block';
@@ -147,23 +153,44 @@
       }
     }
 
-    const editForm = (da) => {
-      let namaAset = document.getElementById(`namaAset${da}`);
-      let namaAsetLabel = document.getElementById(`namaAsetLabel${da}`);
+    const editAsset = (da) => {
+      let nameAsset = document.getElementById(`nameAsset${da}`);
+      let nameAssetLabel = document.getElementById(`nameAssetLabel${da}`);
       let price = document.getElementById(`price${da}`);
       let priceLabel = document.getElementById(`priceLabel${da}`);
       let save = document.getElementById(`save${da}`);
-      if(namaAset.style.display == "none"){
-        namaAset.style.display = "block";
-        namaAsetLabel.style.display = "none";
+      if (nameAsset.style.display == "none") {
+        nameAsset.style.display = "block";
+        nameAssetLabel.style.display = "none";
         price.style.display = "block";
         priceLabel.style.display = "none";
         save.style.display = "inline";
-      }else{
-        namaAset.style.display = "none";
-        namaAsetLabel.style.display = "block";
+      } else {
+        nameAsset.style.display = "none";
+        nameAssetLabel.style.display = "block";
         price.style.display = "none";
         priceLabel.style.display = "block";
+        save.style.display = "none";
+      }
+
+    }
+    const editFamily = (da) => {
+      let name = document.getElementById(`name${da}`);
+      let nameLabel = document.getElementById(`nameLabel${da}`);
+      let gender = document.getElementById(`gender${da}`);
+      let genderLabel = document.getElementById(`genderLabel${da}`);
+      let save = document.getElementById(`save${da}`);
+      if (name.style.display == "none") {
+        name.style.display = "block";
+        nameLabel.style.display = "none";
+        gender.style.display = "block";
+        genderLabel.style.display = "none";
+        save.style.display = "inline";
+      } else {
+        name.style.display = "none";
+        nameLabel.style.display = "block";
+        gender.style.display = "none";
+        genderLabel.style.display = "block";
         save.style.display = "none";
       }
     }

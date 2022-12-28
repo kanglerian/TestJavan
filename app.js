@@ -7,8 +7,8 @@ let cors = require('cors');
 let methodOverride = require('method-override');
 
 let indexRouter = require('./routes/index');
-let usersRouter = require('./routes/users');
-let asetRouter = require('./routes/aset');
+let familiesRouter = require('./routes/families');
+let assetsRouter = require('./routes/assets');
 
 let app = express();
 
@@ -25,8 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/aset', asetRouter);
+app.use('/families', familiesRouter);
+app.use('/assets', assetsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

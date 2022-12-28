@@ -2,24 +2,23 @@ let express = require('express');
 let router = express.Router();
 let axios = require('axios');
 
-const { Keluarga, Aset } = require('../models');
+const { Family, Asset } = require('../models');
 
 router.get('/', async (req, res) => {
-  const data = await Aset.findAll({
+  const assets = await Asset.findAll({
     include: [
-      { model: Keluarga, as: 'User' }
+      { model: Family, as: 'Family' }
     ],
   });
-  const keluarga = await Keluarga.findAll();
+  const keluarga = await Family.findAll();
   await axios.get('https://dummyjson.com/products')
   .then((response) => {
     const products = response.data.products;
     res.render('assets/index',{
-      title: 'TesJavan - Aset',
-      families: data,
+      title: 'TestJavan - Assets',
       products: products,
-      data: data,
-      keluarga: keluarga
+      assets: assets,
+      families: keluarga
     });
   }).catch((error) => {
     res.send(error);
