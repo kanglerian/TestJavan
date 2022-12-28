@@ -11,21 +11,110 @@
         <li><a href="/users">User</a></li>
     </ul>
     <h1><%= title %></h1>
-    <p>Ini adalah daftar aset dari API:</p>
-    <p><i>https://dummyjson.com/products</i></p>
-    <table>
+    <p>Ini adalah daftar aset yang dimiliki semua orang:</p>
+    <button onclick="addAset()">Add Asset</button>
+    <div style="margin-top: 10px;display: none;" id="add-aset">
+      <form action="/users/aset" method="POST">
+        <select name="idUser">
+          <% keluarga.forEach((keluar,i) => { %>
+          <option value="<%= keluar.id %>"><%= keluar.nama %></option>
+          <% }); %>
+        </select>
+        <input type="hidden" name="price" id="price">
+        <select name="namaAset" id="aset" onchange="changeProduct(this.options[this.selectedIndex].getAttribute('data-price'))">
+          <option>Pilih</option>
+          <% products.forEach((product,i) => { %>
+          <option value="<%= product.title %>" data-price="<%= product.price %>"><%=  product.title %></option>
+          <% }); %>
+        </select>
+        <button type="submit">save</button>
+      </form>
+    </div>
+    <table style="margin-top: 10px">
         <tr>
             <th>No</th>
+            <th>User</th>
             <th>Title</th>
             <th>Price</th>
+            <th>#</th>
         </tr>
-        <% products.forEach((product, i) => { %>
+        <% if(data.length > 0){ %>
+        <% data.forEach((dat, i) => { %>
         <tr>
             <td><%= i + 1 %></td>
-            <td><%= product.title %></td>
-            <td>$<%= product.price.toLocaleString('en-US') %></td>
+            <form action="/users/aset/<%= dat.id %>?_method=PATCH" method="POST">
+              <td>
+                <span id="idUserLabel<%= dat.id %>" style="display:block"><%= dat.User.nama %></span>
+                <select name="idUser" id="idUser<%= dat.id %>" style="display:none">
+                  <option value="<%= dat.idUser %>"><%= dat.User.nama %></option>
+                  <% keluarga.forEach((keluar,i) => { %>
+                  <option value="<%= keluar.id %>"><%= keluar.nama %></option>
+                  <% }); %>
+                </select>
+              </td>
+            <td>
+              <span id="namaAsetLabel<%= dat.id %>" style="display:block"><%= dat.namaAset %></span>
+              <input type="text" name="namaAset" value="<%= dat.namaAset %>" id="namaAset<%= dat.id %>"  style="display:none">
+            </td>
+            <td>
+              <span id="priceLabel<%= dat.id %>" style="display:block">$<%= dat.price.toLocaleString('en-US')%></span>
+              <input type="text" name="price" value="<%= dat.price %>" id="price<%= dat.id %>"  style="display:none">
+            </td>
+            <td>
+              <button type="submit" style="display:none" id="save<%= dat.id %>">save</button>
+            </form>
+            <button onclick="editForm(`<%= dat.id %>`)">edit</button>
+              <form style="display: inline;" action="/users/aset/<%= dat.id %>?_method=DELETE" method="POST">
+                <button type="submit">hapus</button>
+              </form>
+            </td>
         </tr>
         <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="5">Belum ada aset yang dimiliki</td>
+          </tr>
+        <% } %>
     </table>
+    <script>
+    function addAset() {
+      const form = document.getElementById('add-aset');
+      if (form.style.display == 'none') {
+        form.style.display = 'block';
+      } else {
+        form.style.display = 'none';
+      }
+    }
+    function changeProduct(data) {
+      const price = document.getElementById('price').value = data;
+    }
+    
+    const editForm = (da) => {
+      let idUser = document.getElementById(`idUser${da}`);
+      let idUserLabel = document.getElementById(`idUserLabel${da}`);
+      let namaAset = document.getElementById(`namaAset${da}`);
+      let namaAsetLabel = document.getElementById(`namaAsetLabel${da}`);
+      let price = document.getElementById(`price${da}`);
+      let priceLabel = document.getElementById(`priceLabel${da}`);
+      let save = document.getElementById(`save${da}`);
+      if(idUser.style.display == "none"){
+        idUser.style.display = "block";
+        idUserLabel.style.display = "none";
+        namaAset.style.display = "block";
+        namaAsetLabel.style.display = "none";
+        price.style.display = "block";
+        priceLabel.style.display = "none";
+        save.style.display = "inline";
+      }else{
+        idUser.style.display = "none";
+        idUserLabel.style.display = "block";
+        namaAset.style.display = "none";
+        namaAsetLabel.style.display = "block";
+        price.style.display = "none";
+        priceLabel.style.display = "block";
+        save.style.display = "none";
+      }
+    }
+    </script>
   </body>
 </html>

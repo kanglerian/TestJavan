@@ -70,6 +70,19 @@ router.post('/keluarga', async(req, res) => {
   }
 });
 
+router.patch('/aset/:id', async(req, res) => {
+  try {
+    await Aset.update(req.body,{
+      where:{
+        id: req.params.id
+      }
+    });
+    res.redirect('back');
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 router.patch('/:id', async(req, res) => {
   try {
     await Keluarga.update(req.body,{

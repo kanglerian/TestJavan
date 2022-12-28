@@ -37,20 +37,25 @@
       <th>Price</th>
       <th>#</th>
     </tr>
+    <% var totalPrice = 0; %>
     <% if(asets.length > 0){ %>
     <% asets.forEach((aset,i) => { %>
     <tr>
       <td><%= i + 1 %></td>
+      <form action="/users/aset/<%= aset.id %>?_method=PATCH" method="POST">
       <td>
-        <span id="namaAsetLabel<%= aset.id %>"><%= aset.namaAset %></span>
-        <input type="text" name="namaAset" value="<%= aset.namaAset %>" id="namaAset<%= aset.id %>" >
+        <span id="namaAsetLabel<%= aset.id %>" style="display:block"><%= aset.namaAset %></span>
+        <input type="text" name="namaAset" value="<%= aset.namaAset %>" id="namaAset<%= aset.id %>"  style="display:none">
       </td>
       <td>
-        <span id="priceLabel<%= aset.id %>">$<%= aset.price.toLocaleString('en-US')%></span>
-        <input type="text" name="price" value="<%= aset.price.toLocaleString('en-US')%>" id="namaAset<%= aset.id %>" >
+        <span id="priceLabel<%= aset.id %>" style="display:block">$<%= aset.price.toLocaleString('en-US')%></span>
+        <input type="text" name="price" value="<%= aset.price %>" id="price<%= aset.id %>"  style="display:none">
+        <% totalPrice += aset.price %>
       </td>
       <td>
-        <button>edit</button>
+        <button type="submit" style="display:none" id="save<%= aset.id %>">save</button>
+      </form>
+      <button onclick="editForm(`<%= aset.id %>`)">edit</button>
         <form style="display: inline;" action="/users/aset/<%= aset.id %>?_method=DELETE" method="POST">
           <button type="submit">hapus</button>
         </form>
@@ -63,6 +68,7 @@
       </tr>
     <% } %>
   </table>
+  <p>Total Price: $<%= totalPrice.toLocaleString('en-US') %></p>
   <%}%>
 
   <p>Ini adalah daftar keluarga <b><%= nama.nama %></b>:</p>
@@ -142,22 +148,22 @@
     }
 
     const editForm = (da) => {
-      let nama = document.getElementById(`nama${da}`);
-      let namaLabel = document.getElementById(`namaLabel${da}`);
-      let jk = document.getElementById(`jk${da}`);
-      let jkLabel = document.getElementById(`jkLabel${da}`);
+      let namaAset = document.getElementById(`namaAset${da}`);
+      let namaAsetLabel = document.getElementById(`namaAsetLabel${da}`);
+      let price = document.getElementById(`price${da}`);
+      let priceLabel = document.getElementById(`priceLabel${da}`);
       let save = document.getElementById(`save${da}`);
-      if(nama.style.display == "none"){
-        nama.style.display = "block";
-        namaLabel.style.display = "none";
-        jk.style.display = "block";
-        jkLabel.style.display = "none";
+      if(namaAset.style.display == "none"){
+        namaAset.style.display = "block";
+        namaAsetLabel.style.display = "none";
+        price.style.display = "block";
+        priceLabel.style.display = "none";
         save.style.display = "inline";
       }else{
-        nama.style.display = "none";
-        namaLabel.style.display = "block";
-        jk.style.display = "none";
-        jkLabel.style.display = "block";
+        namaAset.style.display = "none";
+        namaAsetLabel.style.display = "block";
+        price.style.display = "none";
+        priceLabel.style.display = "block";
         save.style.display = "none";
       }
     }
