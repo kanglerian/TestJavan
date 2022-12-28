@@ -2,7 +2,10 @@
 
 Ini adalah aplikasi yang dibuat dalam proses rekrutmen Javan "Soal Test NodeJS".
 
-Cara menjalankan aplikasi:
+1. Schema DB
+![Schema DB](/schema_db.png?raw=true)
+
+2. Cara menjalankan aplikasi:
 - git clone repository ini
 - lakukan `sudo npm install`
 - buatlah terlebih dahulu database dengan nama `javan_db`
