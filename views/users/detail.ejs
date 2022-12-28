@@ -45,7 +45,10 @@
         <span id="namaAsetLabel<%= aset.id %>"><%= aset.namaAset %></span>
         <input type="text" name="namaAset" value="<%= aset.namaAset %>" id="namaAset<%= aset.id %>" >
       </td>
-      <td>$<%= aset.price.toLocaleString('en-US') %></td>
+      <td>
+        <span id="priceLabel<%= aset.id %>">$<%= aset.price.toLocaleString('en-US')%></span>
+        <input type="text" name="price" value="<%= aset.price.toLocaleString('en-US')%>" id="namaAset<%= aset.id %>" >
+      </td>
       <td>
         <button>edit</button>
         <form style="display: inline;" action="/users/aset/<%= aset.id %>?_method=DELETE" method="POST">
