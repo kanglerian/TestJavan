@@ -1,30 +1,104 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/aset">Aset</a></li>
-        <li><a href="/users">User</a></li>
-    </ul>
-    <h1><%= title %></h1>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/aset">Aset</a></li>
+    <li><a href="/users">User</a></li>
+  </ul>
+
     <p>Ini adalah daftar keluarga:</p>
-    <table>
-        <tr>
-            <th>No</th>
-            <th>Nama</th>
-            <th>Jenis Kelamin</th>
-        </tr>
-        <% families.forEach((family,i) => {%>
-          <tr>
-            <td><%= i + 1 %></td>
-            <td><a href="/users/<%= family.id %>"><%= family.nama %></a></td>
-            <td><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></td>
-          </tr>
-        <% }); %>
-    </table>
-  </body>
+    <button onclick="addKeluarga()">Add Keluarga</button>
+    <div style="margin-top: 10px;display: none;" id="add-keluarga">
+      <form action="/users/keluarga" method="POST">
+        <input type="text" name="nama" placeholder="Input name in here..">
+        <select name="jeniskelamin">
+          <option value="1">Laki-laki</option>
+          <option value="0">Perempuan</option>
+        </select>
+        <button type="submit">save</button>
+      </form>
+    </div>
+  <table style="margin-top: 10px">
+    <tr>
+      <th>No</th>
+      <th>Nama</th>
+      <th>Jenis Kelamin</th>
+      <th>#</th>
+    </tr>
+    <% if(families.length > 0){ %>
+    <% families.forEach((family,i) => { %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <form action="/users/<%= family.id %>?_method=PATCH" method="POST">
+      <td>
+        <a href="/users/<%= family.id %>" id="namaLabel<%= family.id %>" style="display:block"><%= family.nama %></a>
+        <input type="text" name="nama" value="<%= family.nama %>" id="nama<%= family.id %>" style="display:none">
+      </td>
+      <td>
+        <span id="jkLabel<%= family.id %>" style="display:block"><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></span>
+        <select name="jeniskelamin" id="jk<%= family.id %>" style="display:none">
+          <option value="<%= family.jeniskelamin == true ? 1 : 0 %>" selected><%= family.jeniskelamin == true ? 'Laki-laki' : 'Perempuan' %></option>
+          <option value="<%= family.jeniskelamin == true ? 0 : 1 %>"><%= family.jeniskelamin == true ? 'Perempuan' : 'Laki-laki' %></option>
+        </select>
+      </td>
+      <td>
+        <button type="submit" style="display:none" id="save<%= family.id %>">save</button>
+      </form>
+        <button onclick="editForm(`<%= family.id %>`)">edit</button>
+        <form style="display: inline;" action="/users/<%= family.id %>?_method=DELETE" method="POST">
+          <button type="submit">hapus</button>
+        </form>
+      </td>
+    </tr>
+    <% }); %>
+    <% } else { %>
+      <tr>
+        <td colspan="4">Belum ada keluarga yang dimiliki</td>
+      </tr>
+    <% } %>
+  </table>
+
+  <script>
+    function changeProduct(data) {
+      const price = document.getElementById('price').value = data;
+    }
+
+    function addKeluarga() {
+      const form = document.getElementById('add-keluarga');
+      if (form.style.display == 'none') {
+        form.style.display = 'block';
+      } else {
+        form.style.display = 'none';
+      }
+    }
+    const editForm = (da) => {
+      let nama = document.getElementById(`nama${da}`);
+      let namaLabel = document.getElementById(`namaLabel${da}`);
+      let jk = document.getElementById(`jk${da}`);
+      let jkLabel = document.getElementById(`jkLabel${da}`);
+      let save = document.getElementById(`save${da}`);
+      if(nama.style.display == "none"){
+        nama.style.display = "block";
+        namaLabel.style.display = "none";
+        jk.style.display = "block";
+        jkLabel.style.display = "none";
+        save.style.display = "inline";
+      }else{
+        nama.style.display = "none";
+        namaLabel.style.display = "block";
+        jk.style.display = "none";
+        jkLabel.style.display = "block";
+        save.style.display = "none";
+      }
+    }
+  </script>
+</body>
+
 </html>
